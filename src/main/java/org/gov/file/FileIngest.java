@@ -19,10 +19,13 @@ public class FileIngest {
 
         esclient.createClientSession();
 
-        // Look for stateg files to ingest
+        // Look for staged files to ingest
         JSONObject stagedFiles = hssmclient.getStagedFiles();
 
         int count = stagedFiles.getJSONObject("result").getInt("count");
+        ArrayList<JSONObject> arrUpdateStaged = new ArrayList<JSONObject>(count);
+        ArrayList<JSONObject> arrFinal = new ArrayList<JSONObject>(count);
+
         System.out.println("Result count: " + count);
         System.out.println("Result 2nd: " + stagedFiles.getJSONObject("result").getJSONArray("items").get(2));
 
@@ -33,12 +36,14 @@ public class FileIngest {
 
         for(int i = 0; i < count; i++) {
             JSONObject stagedFile = stagedFiles.getJSONObject("result").getJSONArray("items").getJSONObject(i);
+            JSONObject jsonHit = new JSONObject(stagedFile);
             System.out.println("Staged file ===> " + stagedFile.toString());
 
             String mimetype = stagedFile.getString("mimetype");
             System.out.println("mimetype: " + mimetype);
 
             JSONObject jsonFinal = null;
+            JSONObject jsonIndexCategory = null;
             String indexName = "";
 
             if (mimetype.compareTo("image/jpeg") == 0) {
@@ -53,84 +58,38 @@ public class FileIngest {
                         )
                 );
 
-                jsonFinal = (new JSONObject(stagedFile)).put("exif", jsonExif.getJSONObject("exif"));
-                System.out.println("jsonFinal: " + jsonFinal.toString());
+                System.out.println("jsonExif: " + jsonExif.toString());
+
+                jsonIndexCategory = new JSONObject();
+                jsonIndexCategory.put("index", "photos");
+                jsonIndexCategory.put("id", stagedFile.getString("id"));
+                jsonIndexCategory.put("data", jsonExif);
+
+//                jsonFinal = (new JSONObject(stagedFile)).put("exif", jsonExif.getJSONObject("exif"));
+                System.out.println("jsonIndexCategory: " + jsonIndexCategory.toString());
 
             } else if (mimetype.compareTo("application/pdf") == 0 ) {
                 indexName = "documents";
 
                 System.out.println("application/pdf found!!!!!!!!");
 //                JSONObject jsonMeta = PDFMetaData.extractPDFMetaData(jsonHit.getString("filename"), filePath);
-//
 //                jsonFinal = (new JSONObject(hit)).put("meta", jsonMeta);
-//
 //                System.out.println("jsonFinal: " + jsonFinal.toString());
-
             }
+
+
+            arrFinal.add(jsonIndexCategory);
         }
 
-//        ArrayList<JSONObject> arrUpdateStaged = new ArrayList<JSONObject>(arrHits.size());
+//             this below line is working
+        esclient.indexBuilkDocuments( arrFinal);
 //
-//        ArrayList<JSONObject> arrFinal = new ArrayList<JSONObject>(arrHits.size());
-//        // For each staged file perform file specific meta data extraction and other processing
-//        // and add the additional data to ES
-//        for(String hit: arrHits) {
-//
-//            JSONObject jsonHit = new JSONObject(hit);
-//            String mimetype = jsonHit.getString("mimetype");
-//
-////            System.out.println("[hit]: " + jsonHit.getString("path"));
-//            System.out.println("[hit]: " + mimetype);
-//            File file1 = new File(jsonHit.getString("path"));
-//            String filePath = jsonHit.getString("path");
-//
-//            JSONObject jsonFinal = null;
-//            String indexName = "";
-//
-//            if (mimetype.compareTo("image/jpeg") == 0) {
-//                indexName = "photos";
-//
-//                System.out.println("image/jpeg found!!!!!!!!");
-//
-//                JSONObject jsonExif = ExifJSON.getExifJSON(file1);
-//                jsonFinal = (new JSONObject(hit)).put("exif", jsonExif.getJSONObject("exif"));
-//
-//            } else if (mimetype.compareTo("application/pdf") == 0 ) {
-//                indexName = "documents";
-//
-//                System.out.println("application/pdf found!!!!!!!!");
-//                JSONObject jsonMeta = PDFMetaData.extractPDFMetaData(jsonHit.getString("filename"), filePath);
-//
-//                jsonFinal = (new JSONObject(hit)).put("meta", jsonMeta);
-//
-//                System.out.println("jsonFinal: " + jsonFinal.toString());
-//
-//            }
-//
-//            jsonFinal.remove("status");
-//            arrFinal.add(jsonFinal);
-//            jsonHit.put("status", "staged");
-////            arrUpdateStaged.add(jsonHit);
-//            // Index each item to ES
-//            esclient.indexDocument(indexName, jsonFinal);
-//
-//            System.out.println("With exif: " + jsonHit.getString("status"));
-//            System.out.println("With exif: " + jsonFinal.toString());
-//        }
-
-        // this below line is working
-//        esclient.indexBuilkDocuments("photos", arrFinal);
-
 //        // TODO: this below line has issues updating
 //        if (arrUpdateStaged.size() > 0)
 //            esclient.updateBuilkDocuments("stagedfiles", arrUpdateStaged);
-
-
-
-
-
-
-
+//
+//
+//        }
 
     }
 }

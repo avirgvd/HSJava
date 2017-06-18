@@ -42,7 +42,7 @@ public class ESClient {
             //Try starting search client at context loading
             try
             {
-                Settings settings = Settings.settingsBuilder().put("cluster.name", "elasticsearch").build();
+                Settings settings = Settings.settingsBuilder().put("cluster.name", "homeserver").build();
 
 //                client = TransportClient.builder().build()
                 client = TransportClient.builder().settings(settings).build()
@@ -102,13 +102,18 @@ public class ESClient {
         return 0;
     }
 
-    public int indexBuilkDocuments( String index, ArrayList<JSONObject> arrDocs) {
+    public int indexBuilkDocuments( ArrayList<JSONObject> arrDocs) {
 
         BulkRequestBuilder bulkRequest = client.prepareBulk();
 
         for(JSONObject jsonDocument: arrDocs) {
-            bulkRequest.add(client.prepareIndex(index, index, jsonDocument.getString("filename"))
-                    .setSource(jsonDocument.toString())
+
+            System.out.println("indexBuilkDocuments: jsonDocument: " + jsonDocument.toString());
+            bulkRequest.add(client.prepareIndex(
+                    jsonDocument.getString("index"),
+                    jsonDocument.getString("index"),
+                    jsonDocument.getString("id"))
+                    .setSource(jsonDocument.getJSONObject("data").toString())
             );
 
         }
