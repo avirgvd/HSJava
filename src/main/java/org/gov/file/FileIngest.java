@@ -22,12 +22,14 @@ public class FileIngest {
         // Look for staged files to ingest
         JSONObject stagedFiles = hssmclient.getStagedFiles();
 
+        System.out.println("stagedFiles: " + stagedFiles.toString());
+
         int count = stagedFiles.getJSONObject("result").getInt("count");
         ArrayList<JSONObject> arrUpdateStaged = new ArrayList<JSONObject>(count);
         ArrayList<JSONObject> arrFinal = new ArrayList<JSONObject>(count);
 
         System.out.println("Result count: " + count);
-        System.out.println("Result 2nd: " + stagedFiles.getJSONObject("result").getJSONArray("items").get(2));
+//        System.out.println("Result 2nd: " + stagedFiles.getJSONObject("result").getJSONArray("items").get(2));
 
         if(count == 0) {
             System.out.println("NO STAGED FILES FOUND SO EXITING.....");
@@ -60,13 +62,18 @@ public class FileIngest {
 
                 System.out.println("jsonExif: " + jsonExif.toString());
 
-                jsonIndexCategory = new JSONObject();
-                jsonIndexCategory.put("index", "photos");
-                jsonIndexCategory.put("id", stagedFile.getString("id"));
-                jsonIndexCategory.put("data", jsonExif);
+                stagedFile.put("exif", jsonExif);
+                stagedFile.put("status", "staged");
+                stagedFile.put("file_date", jsonExif.getJSONObject("exif").getJSONObject("Exif IFD0").getString("Date/Time"));
 
-//                jsonFinal = (new JSONObject(stagedFile)).put("exif", jsonExif.getJSONObject("exif"));
-                System.out.println("jsonIndexCategory: " + jsonIndexCategory.toString());
+                jsonIndexCategory = new JSONObject();
+//                jsonIndexCategory.put("index", "photos");
+                jsonIndexCategory.put("index", "sm_objectstoreindex_staging");
+                jsonIndexCategory.put("id", stagedFile.getString("id"));
+
+                jsonIndexCategory.put("data", stagedFile);
+
+                System.out.println("Updated stagedFile: " + jsonIndexCategory.toString());
 
             } else if (mimetype.compareTo("application/pdf") == 0 ) {
                 indexName = "documents";
@@ -81,15 +88,9 @@ public class FileIngest {
             arrFinal.add(jsonIndexCategory);
         }
 
-//             this below line is working
-        esclient.indexBuilkDocuments( arrFinal);
-//
-//        // TODO: this below line has issues updating
-//        if (arrUpdateStaged.size() > 0)
-//            esclient.updateBuilkDocuments("stagedfiles", arrUpdateStaged);
-//
-//
-//        }
+//        esclient.updateBulkDocuments( arrFinal);
+        HSSMClient.bulkMove(arrFinal, "media1");
+
 
     }
 }

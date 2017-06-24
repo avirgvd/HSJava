@@ -8,6 +8,9 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 // RESTFul API client implementation to talk to HSStorageManager
@@ -28,7 +31,7 @@ public class HSSMClient {
             conn.setRequestProperty("Accept", "application/json");
             conn.setRequestProperty("Content-Type", "application/json");
 
-            JSONObject body = new JSONObject("{\"params\": {\"bucket\": \"staged\"}}");
+            JSONObject body = new JSONObject("{\"params\": {\"bucket\": \"staging\"}, \"query\": {\"match\": {\"status\": \"staging\"}}}}");
 
             OutputStream os = conn.getOutputStream();
             os.write(body.toString().getBytes());
@@ -132,7 +135,68 @@ public class HSSMClient {
 
     }
 
+    public static void bulkMove(ArrayList<JSONObject> arrItems, String targetbucket) {
 
+        JSONArray body = new JSONArray();
+
+        int count = 0;
+
+        for(JSONObject jsonItem: arrItems) {
+
+            System.out.println("bulkmove item: " + jsonItem);
+
+            JSONObject item = new JSONObject();
+            item.put("souceindex", jsonItem.getString("index"));
+            item.put("objID", jsonItem.getString("id"));
+            item.put("targetbucket", targetbucket);
+
+            System.out.println("bulkmove arrayitem: " + item.toString());
+            body.put(count, item);
+            count++;
+
+        }
+
+        System.out.println("bulkmove: arrJSON: " + body.toString());
+
+        try {
+
+            URL url = new URL("http://localhost:3040/rest/bulkmove");
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setDoOutput(true);
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Accept", "application/json");
+            conn.setRequestProperty("Content-Type", "application/json");
+
+//            JSONObject body = new JSONObject("{\"params\": {\"bucket\": " + bucket + ", \"objid\": " + objID + "}}");
+
+            OutputStream os = conn.getOutputStream();
+            os.write(body.toString().getBytes());
+            os.flush();
+            os.close();
+
+            System.out.println("Before making the rest call");
+
+
+            if (conn.getResponseCode() != 200) {
+                throw new RuntimeException("Failed : HTTP error code : "
+                        + conn.getResponseCode());
+            }
+            System.out.println("After making the rest call");
+
+            conn.disconnect();
+
+
+        } catch (MalformedURLException e) {
+
+            e.printStackTrace();
+
+        } catch (IOException e) {
+
+            e.printStackTrace();
+
+        }
+
+    }
 
     // http://localhost:8080/RESTfulExample/json/product/get
     public static void main(String[] args) {
@@ -140,5 +204,6 @@ public class HSSMClient {
         HSSMClient.getFile("staging", "6cd1b67b-2095-4164-91ab-cc2d8d11b1ea");
 
     }
+
 
 }

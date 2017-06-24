@@ -102,18 +102,17 @@ public class ESClient {
         return 0;
     }
 
-    public int indexBuilkDocuments( ArrayList<JSONObject> arrDocs) {
+    public int updateBulkDocuments( ArrayList<JSONObject> arrDocs) {
 
         BulkRequestBuilder bulkRequest = client.prepareBulk();
 
         for(JSONObject jsonDocument: arrDocs) {
 
             System.out.println("indexBuilkDocuments: jsonDocument: " + jsonDocument.toString());
-            bulkRequest.add(client.prepareIndex(
+            bulkRequest.add(client.prepareUpdate(
                     jsonDocument.getString("index"),
                     jsonDocument.getString("index"),
-                    jsonDocument.getString("id"))
-                    .setSource(jsonDocument.getJSONObject("data").toString())
+                    jsonDocument.getString("id")).setDoc(jsonDocument.getJSONObject("data").toString())
             );
 
         }
@@ -127,25 +126,6 @@ public class ESClient {
         return 0;
     }
 
-    public int updateBuilkDocuments( String index, ArrayList<JSONObject> arrDocs) {
-
-        BulkRequestBuilder bulkRequest = client.prepareBulk();
-
-        for(JSONObject jsonDocument: arrDocs) {
-            bulkRequest.add(client.prepareUpdate(index, index, jsonDocument.getString("filename"))
-                    .setDoc((new JSONObject("{\"status\": \"staged\"}")).toString())
-            );
-
-        }
-
-        BulkResponse bulkResponse = bulkRequest.get();
-        if (bulkResponse.hasFailures()) {
-            // process failures by iterating through each bulk response item
-            System.out.println("Errors in bulk indexing");
-        }
-
-        return 0;
-    }
 
     public int getDocument(String indexName, String indexType, String id) {
         GetResponse response = client.prepareGet(indexType, indexType, id)
