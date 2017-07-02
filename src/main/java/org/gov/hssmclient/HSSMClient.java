@@ -31,6 +31,8 @@ public class HSSMClient {
             conn.setRequestProperty("Accept", "application/json");
             conn.setRequestProperty("Content-Type", "application/json");
 
+            // TODO: Below line changed temporarily. Should be reverted
+//            JSONObject body = new JSONObject("{\"params\": {\"bucket\": \"staging\"}, \"query\": {\"match\": {\"status\": \"staging\"}}}}");
             JSONObject body = new JSONObject("{\"params\": {\"bucket\": \"staging\"}, \"query\": {\"match\": {\"status\": \"staging\"}}}}");
 
             OutputStream os = conn.getOutputStream();
@@ -135,28 +137,8 @@ public class HSSMClient {
 
     }
 
-    public static void bulkMove(ArrayList<JSONObject> arrItems, String targetbucket) {
+    public static void bulkMove(ArrayList<JSONObject> arrMoveList) {
 
-        JSONArray body = new JSONArray();
-
-        int count = 0;
-
-        for(JSONObject jsonItem: arrItems) {
-
-            System.out.println("bulkmove item: " + jsonItem);
-
-            JSONObject item = new JSONObject();
-            item.put("souceindex", jsonItem.getString("index"));
-            item.put("objID", jsonItem.getString("id"));
-            item.put("targetbucket", targetbucket);
-
-            System.out.println("bulkmove arrayitem: " + item.toString());
-            body.put(count, item);
-            count++;
-
-        }
-
-        System.out.println("bulkmove: arrJSON: " + body.toString());
 
         try {
 
@@ -170,12 +152,54 @@ public class HSSMClient {
 //            JSONObject body = new JSONObject("{\"params\": {\"bucket\": " + bucket + ", \"objid\": " + objID + "}}");
 
             OutputStream os = conn.getOutputStream();
-            os.write(body.toString().getBytes());
+            os.write(arrMoveList.toString().getBytes());
             os.flush();
             os.close();
 
             System.out.println("Before making the rest call");
 
+
+            if (conn.getResponseCode() != 200) {
+                throw new RuntimeException("Failed : HTTP error code : "
+                        + conn.getResponseCode());
+            }
+            System.out.println("After making the rest call");
+
+            conn.disconnect();
+
+
+        } catch (MalformedURLException e) {
+
+            e.printStackTrace();
+
+        } catch (IOException e) {
+
+            e.printStackTrace();
+
+        }
+
+    }
+
+    public static void bulkUpdate(ArrayList<JSONObject> arrItems, String bucket) {
+
+
+        System.out.println("bulkUpdate: arrItems: " + arrItems.toString());
+
+        try {
+
+            URL url = new URL("http://localhost:3040/rest/bulkupdate");
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setDoOutput(true);
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Accept", "application/json");
+            conn.setRequestProperty("Content-Type", "application/json");
+
+            OutputStream os = conn.getOutputStream();
+            os.write(arrItems.toString().getBytes());
+            os.flush();
+            os.close();
+
+            System.out.println("Before making the rest call");
 
             if (conn.getResponseCode() != 200) {
                 throw new RuntimeException("Failed : HTTP error code : "

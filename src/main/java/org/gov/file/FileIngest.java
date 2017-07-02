@@ -1,28 +1,81 @@
 package org.gov.file;
 
-import org.gov.file.PDF.PDFMetaData;
-import org.gov.elasticsearch.ESClient;
 import org.gov.file.imaging.ExifJSON;
 import org.gov.hssmclient.HSSMClient;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.util.ArrayList;
 
 public class FileIngest {
 
+    protected static HSSMClient hssmclient = new HSSMClient();
+
     public static void main(String[] args) {
 	// write your code here
-
-        ESClient esclient = new ESClient();
-        HSSMClient hssmclient = new HSSMClient();
-
-        esclient.createClientSession();
 
         // Look for staged files to ingest
         JSONObject stagedFiles = hssmclient.getStagedFiles();
 
         System.out.println("stagedFiles: " + stagedFiles.toString());
+
+        ArrayList<JSONObject> arrFinal = processStagedFiles(stagedFiles);
+
+        moveFromStagedtoMimeBucket(arrFinal);
+
+    }
+
+    /**
+     * Method: moveFromStagedtoMimeBucket
+     * @param arrStagedFiles
+     * Description: Moves the files in the list to corresponding buckets based on the file mime-type
+     */
+    private static void moveFromStagedtoMimeBucket(ArrayList<JSONObject> arrStagedFiles) {
+
+        ArrayList<JSONObject> arrMoveList = new ArrayList<JSONObject>();
+
+
+        for (JSONObject stagedFile: arrStagedFiles) {
+
+            System.out.println("moveFromStagedtoMimeBucket: " + stagedFile.toString());
+
+            String strBucket = getBucketForMimeType(stagedFile.getString("mimetype"));
+            JSONObject jsonMoveItem = new JSONObject();
+            jsonMoveItem.put("targetbucket", strBucket);
+            jsonMoveItem.put("sourcebucket", stagedFile.getString("container"));
+            jsonMoveItem.put("id", stagedFile.getString("id"));
+
+            arrMoveList.add(jsonMoveItem);
+
+
+        }
+
+        HSSMClient.bulkMove(arrMoveList);
+    }
+
+    private static String getBucketForMimeType(String mimeType) {
+        System.out.println("getBucketForMimeType: " + mimeType);
+
+        String bucket = "";
+        if(mimeType.compareTo("image/jpeg") == 0) {
+            bucket = "media1";
+        }
+        else if(mimeType.compareTo("application/pdf") == 0) {
+            bucket = "docs";
+        }
+        else {
+            bucket = "unknown";
+        }
+
+        return bucket;
+    }
+
+    /**
+     * Method: processStagedFiles
+     * @param stagedFiles
+     * @return
+     * Description: Extracts file metadata and update the staging index with the metadata
+     */
+    private static ArrayList<JSONObject> processStagedFiles(JSONObject stagedFiles) {
 
         int count = stagedFiles.getJSONObject("result").getInt("count");
         ArrayList<JSONObject> arrUpdateStaged = new ArrayList<JSONObject>(count);
@@ -33,7 +86,7 @@ public class FileIngest {
 
         if(count == 0) {
             System.out.println("NO STAGED FILES FOUND SO EXITING.....");
-            return;
+            return null;
         }
 
         for(int i = 0; i < count; i++) {
@@ -62,18 +115,18 @@ public class FileIngest {
 
                 System.out.println("jsonExif: " + jsonExif.toString());
 
-                stagedFile.put("exif", jsonExif);
+                stagedFile.put("exif", jsonExif.getJSONObject("exif"));
                 stagedFile.put("status", "staged");
                 stagedFile.put("file_date", jsonExif.getJSONObject("exif").getJSONObject("Exif IFD0").getString("Date/Time"));
 
-                jsonIndexCategory = new JSONObject();
-//                jsonIndexCategory.put("index", "photos");
-                jsonIndexCategory.put("index", "sm_objectstoreindex_staging");
-                jsonIndexCategory.put("id", stagedFile.getString("id"));
-
-                jsonIndexCategory.put("data", stagedFile);
-
-                System.out.println("Updated stagedFile: " + jsonIndexCategory.toString());
+//                jsonIndexCategory = new JSONObject();
+////                jsonIndexCategory.put("index", "photos");
+//                jsonIndexCategory.put("index", "sm_objectstoreindex_staging");
+//                jsonIndexCategory.put("id", stagedFile.getString("id"));
+//
+//                jsonIndexCategory.put("data", stagedFile);
+//
+//                System.out.println("Updated stagedFile: " + jsonIndexCategory.toString());
 
             } else if (mimetype.compareTo("application/pdf") == 0 ) {
                 indexName = "documents";
@@ -85,12 +138,15 @@ public class FileIngest {
             }
 
 
-            arrFinal.add(jsonIndexCategory);
+            arrFinal.add(stagedFile);
         }
 
-//        esclient.updateBulkDocuments( arrFinal);
-        HSSMClient.bulkMove(arrFinal, "media1");
+        System.out.println("arrFinal: " + arrFinal.toString());
+        HSSMClient.bulkUpdate(arrFinal, "media1");
 
+        return arrFinal;
 
     }
+
+
 }
