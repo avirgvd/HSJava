@@ -32,8 +32,8 @@ public class HSSMClient {
             conn.setRequestProperty("Content-Type", "application/json");
 
             // TODO: Below line changed temporarily. Should be reverted
-//            JSONObject body = new JSONObject("{\"params\": {\"bucket\": \"staging\"}, \"query\": {\"match\": {\"status\": \"staging\"}}}}");
             JSONObject body = new JSONObject("{\"params\": {\"bucket\": \"staging\"}, \"query\": {\"match\": {\"status\": \"staging\"}}}}");
+//            JSONObject body = new JSONObject("{\"params\": {\"bucket\": \"staging\"}, \"query\": {\"match\": {\"status\": \"staged\"}}}}");
 
             OutputStream os = conn.getOutputStream();
             os.write(body.toString().getBytes());

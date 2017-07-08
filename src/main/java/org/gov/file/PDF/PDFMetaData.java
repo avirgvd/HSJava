@@ -15,8 +15,10 @@ import org.apache.pdfbox.pdmodel.common.PDMetadata;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.DateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -26,7 +28,7 @@ import java.util.List;
  */
 public final class PDFMetaData
 {
-    public static JSONObject extractPDFMetaData(String filename, String filePath)
+    public static JSONObject extractPDFMetaData(InputStream inputFileStream)
     {
         JSONObject jsonObject = new JSONObject("{}");
 
@@ -34,18 +36,19 @@ public final class PDFMetaData
         PDDocument document = null;
         try
         {
-            document = PDDocument.load(new File(filePath));
-            PDFRenderer pdfRenderer = new PDFRenderer(document);
+//            document = PDDocument.load(new File(filePath));
+            document = PDDocument.load(inputFileStream);
+//            PDFRenderer pdfRenderer = new PDFRenderer(document);
 
-            PDPage page0 = document.getPage(0);
+//            PDPage page0 = document.getPage(0);
 
-            // Extract PDF thumbnail image from first page
-            BufferedImage bim = pdfRenderer.renderImageWithDPI(0, 300, ImageType.RGB);
+//            // Extract PDF thumbnail image from first page
+//            BufferedImage bim = pdfRenderer.renderImageWithDPI(0, 300, ImageType.RGB);
 
-            String thumbnailPath = filePath + ".png";
-            ImageIOUtil.writeImage(bim, thumbnailPath, 300);
-            // Set the thumbnail file path to the output meta data
-            jsonObject.put("thumbnail", filename + ".png");
+//            String thumbnailPath = filePath + ".png";
+//            ImageIOUtil.writeImage(bim, thumbnailPath, 300);
+//            // Set the thumbnail file path to the output meta data
+//            jsonObject.put("thumbnail", filename + ".png");
 
             PDDocumentCatalog catalog = document.getDocumentCatalog();
 
@@ -54,7 +57,7 @@ public final class PDFMetaData
             if (meta != null) {
 
                 COSInputStream stream = meta.createInputStream();
-                System.out.print("PDF metadata: " + meta.toString());
+//                System.out.print("PDF metadata: " + meta.toString());
 
             }
             if (document != null) {
@@ -64,7 +67,7 @@ public final class PDFMetaData
                 PDDocumentInformation information = document.getDocumentInformation();
                 if (information != null) {
 //                    showDocumentInformation(information);
-                    extractDocumentInformation(jsonObject, information);
+                    jsonObject = extractDocumentInformation(information);
                 }
             }
 
@@ -85,13 +88,29 @@ public final class PDFMetaData
         return jsonObject;
     }
 
-    private static void extractDocumentInformation(JSONObject jsonObject, PDDocumentInformation information)
+    private static JSONObject extractDocumentInformation( PDDocumentInformation information)
     {
-        assign(jsonObject, "Title", information.getTitle());
-        assign(jsonObject, "Subject", information.getSubject());
-        assign(jsonObject, "Author", information.getAuthor());
-        assign(jsonObject, "Creator", information.getCreator());
-        assign(jsonObject, "Producer", information.getProducer());
+        JSONObject jsonObject = new JSONObject("{}");
+
+        jsonObject.put( "Title", information.getTitle());
+        jsonObject.put( "Subject", information.getSubject());
+        jsonObject.put( "Author", information.getAuthor());
+        jsonObject.put( "Creator", information.getCreator());
+        jsonObject.put( "Producer", information.getProducer());
+
+        Calendar calendar = information.getCreationDate();
+
+        if(calendar != null){
+            jsonObject.put( "CreationDate", calendar.getTime().toString());
+        }
+
+        calendar = information.getModificationDate();
+
+        if(calendar != null) {
+            jsonObject.put( "ModificationDate", calendar.getTime().toString());
+        }
+
+        return jsonObject;
     }
 
     private static String format(Object o)

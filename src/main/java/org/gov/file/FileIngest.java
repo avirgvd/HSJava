@@ -2,6 +2,7 @@ package org.gov.file;
 
 import org.gov.file.imaging.ExifJSON;
 import org.gov.hssmclient.HSSMClient;
+import org.gov.file.PDF.PDFMetaData;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -39,6 +40,9 @@ public class FileIngest {
             System.out.println("moveFromStagedtoMimeBucket: " + stagedFile.toString());
 
             String strBucket = getBucketForMimeType(stagedFile.getString("mimetype"));
+
+            if(strBucket.compareTo("unknown") == 0) continue; // skip processing if file is unknown mime type
+
             JSONObject jsonMoveItem = new JSONObject();
             jsonMoveItem.put("targetbucket", strBucket);
             jsonMoveItem.put("sourcebucket", stagedFile.getString("container"));
@@ -132,7 +136,25 @@ public class FileIngest {
                 indexName = "documents";
 
                 System.out.println("application/pdf found!!!!!!!!");
-//                JSONObject jsonMeta = PDFMetaData.extractPDFMetaData(jsonHit.getString("filename"), filePath);
+                JSONObject jsonMeta = PDFMetaData.extractPDFMetaData(
+                        hssmclient.getFile(
+                        stagedFile.getString("container"),
+                        stagedFile.getString("id")
+                ));
+
+                System.out.println("\n jsonMeta: " + jsonMeta.toString());
+//                System.out.println("\n jsonMeta: date" + jsonMeta..getString("CreationDate"));
+
+                stagedFile.put("pdfmeta", jsonMeta);
+                stagedFile.put("status", "staged");
+                if(jsonMeta.has("CreationDate"))
+                    stagedFile.put("file_date", jsonMeta.getString("CreationDate"));
+                else if(jsonMeta.has("ModificationDate"))
+                    stagedFile.put("file_date", jsonMeta.getString("ModificationDate"));
+                else
+                    stagedFile.put("file_date", "");
+
+
 //                jsonFinal = (new JSONObject(hit)).put("meta", jsonMeta);
 //                System.out.println("jsonFinal: " + jsonFinal.toString());
             }
