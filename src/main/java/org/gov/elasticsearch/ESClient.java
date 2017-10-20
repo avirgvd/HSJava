@@ -92,6 +92,40 @@ public class ESClient {
         return arrHits;
     }
 
+    public ArrayList<String> searchIndex1( String indexName, JSONObject jsonQuery) {
+
+        SearchResponse response = client.prepareSearch( indexName)
+                .setFrom(0).setSize(500)
+                .execute()
+                .actionGet();
+
+//        System.out.println("search response: " + response.toString());
+//        System.out.println("search hits Total: " + response.getHits().totalHits());
+
+        long totalHits = response.getHits().totalHits();
+        SearchHit[] hits = response.getHits().getHits();
+
+        long currentHits = hits.length;
+
+        System.out.println("HITs: " + hits.toString());
+
+        ArrayList<String> arrHits = new ArrayList<String>(20);
+
+        for ( SearchHit hit : hits ) {
+//            System.out.println("HIT: " + hit.getSourceAsString());
+            arrHits.add(hit.getSourceAsString());
+
+//            indexDocument("photos", hit.getSourceAsString());
+
+        }
+
+
+
+        System.out.println("search hits count: " + hits.getClass());
+
+        return arrHits;
+    }
+
     public int indexDocument( String index, JSONObject jsonObjectDocument) {
         System.out.println("indexDocument: " + index);
 

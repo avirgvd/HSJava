@@ -13,6 +13,8 @@ import javax.mail.internet.*;
 
 //import org.gov.database.NOSQLConnector;
 
+import com.google.api.services.gmail.Gmail;
+import org.gov.email.google.GMail;
 import org.json.JSONObject;
 
 import org.gov.elasticsearch.ESClient;
@@ -602,8 +604,6 @@ public class EMailReceiver {
 //		
 //		return 0;
 //	}
-	
-
 
 
 	/**
@@ -651,6 +651,32 @@ public class EMailReceiver {
 
 		ESClient esclient = new ESClient();
 		esclient.createClientSession();
+
+		// Query the configured email accounts that has read access to inbox
+		// The accounts settings should allow the user to specify if the emails can be imported to HS
+		// And this query should return only such accounts
+
+		ArrayList<String> accounts = esclient.searchIndex1("accounts", null);
+
+		int count = accounts.size();
+
+		for (String account : accounts) {
+
+			JSONObject jsonAccount = new JSONObject(account);
+
+			String accountNetwork = jsonAccount.getString("network");
+			System.out.println("The account network is " + accountNetwork);
+
+			if(accountNetwork.compareTo("google") == 0) {
+				try {
+					Gmail service = GMail.getGmailService(jsonAccount.getJSONObject("authResponse"));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+
 		ArrayList<String> arrHits = esclient.searchIndex("messages", null);
 
 		EMailReceiver.eMailReceiver = new EMailReceiver();

@@ -16,8 +16,4 @@ PDFBox 2.0.3 http://pdfbox.apache.org/download.cgi
 
 
 **Gmail access for EmailReceiver**
-Interaction with GMail needs authorizing the application to access GMail data.
-Using IMAP to access gmail is not secure way as the user need to first enable less secure apps using the URL 
-https://www.google.com/settings/security/lesssecureapps
-
-Instead use the google gmail API to access the emails. To make this work, the client appliaction must be registered with Google and clientID should be used will all the calls to Google.
+Refer to "Google Authentication.md"

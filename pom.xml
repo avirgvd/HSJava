@@ -53,10 +53,24 @@
             <artifactId>htmlparser</artifactId>
             <version>2.1</version>
         </dependency>
+
+        <!-- https://developers.google.com/api-client-library/java/apis/gmail/v1 -->
+
         <dependency>
+            <groupId>com.google.api-client</groupId>
+            <artifactId>google-api-client</artifactId>
+            <version>1.22.0</version>
+        </dependency>
+        <dependency>
+            <!-- https://developers.google.com/api-client-library/java/apis/gmail/v1 -->
             <groupId>com.google.apis</groupId>
             <artifactId>google-api-services-gmail</artifactId>
             <version>v1-rev53-1.22.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.oauth-client</groupId>
+            <artifactId>google-oauth-client-jetty</artifactId>
+            <version>1.22.0</version>
         </dependency>
     </dependencies>
 
