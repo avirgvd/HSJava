@@ -72,3 +72,8 @@ FINALLY gooogle authentication is working
 ##Connecting to GMail from HSJava
 
 
+Date: 29/10/2017
+Trying hello.js again. Registered Google client secret at https://auth-server.herokuapp.com/#signin
+
+Finally this site gave relevant info
+http://voidcanvas.com/googles-oauth-api-node-js/
