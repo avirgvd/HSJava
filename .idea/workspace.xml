@@ -5,12 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4c8fb764-58ed-42aa-8636-b154fdfd0dcd" name="Default" comment="">
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/org/gov/email/google/GMail.java" afterPath="$PROJECT_DIR$/src/main/java/org/gov/email/google/HSGMail.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/org/gov/email/google/client_secret_971270578758.json" afterPath="$PROJECT_DIR$/src/main/resources/client_secret_java2.json" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/resources/client_secret_971270578758.json" afterPath="$PROJECT_DIR$/src/main/java/org/gov/email/google/client_secret_java.json" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Google Authentication" afterPath="$PROJECT_DIR$/Google Authentication" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/gov/email/EMailReceiver.java" afterPath="$PROJECT_DIR$/src/main/java/org/gov/email/EMailReceiver.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/gov/email/EmailUtils.java" afterPath="$PROJECT_DIR$/src/main/java/org/gov/email/EmailUtils.java" />
     </list>
     <ignored path="HSJava.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -31,94 +28,7 @@
     <favorites_list name="HSJava" />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="EMailReceiver.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/org/gov/email/EMailReceiver.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="11934">
-              <caret line="683" column="47" selection-start-line="683" selection-start-column="47" selection-end-line="683" selection-end-column="47" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="EmailUtils.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/org/gov/email/EmailUtils.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="108">
-              <caret line="8" column="13" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="13" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ESClient.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/org/gov/elasticsearch/ESClient.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="324">
-              <caret line="33" column="17" selection-start-line="33" selection-start-column="17" selection-end-line="33" selection-end-column="17" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="HSGMail.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/org/gov/email/google/HSGMail.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="4230">
-              <caret line="259" column="5" selection-start-line="259" selection-start-column="5" selection-end-line="259" selection-end-column="5" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="TokenRequest.class" pinned="false" current-in-tab="true">
-        <entry file="jar://$MAVEN_REPOSITORY$/com/google/oauth-client/google-oauth-client/1.22.0/google-oauth-client-1.22.0.jar!/com/google/api/client/auth/oauth2/TokenRequest.class">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="54">
-              <caret line="6" column="0" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Google Authentication" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Google Authentication">
-          <provider editor-type-id="MarkdownFxPreviewEditor">
-            <state />
-          </provider>
-          <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
-            <state split_layout="FIRST">
-              <first_editor relative-caret-position="1422">
-                <caret line="79" column="0" selection-start-line="79" selection-start-column="0" selection-end-line="79" selection-end-column="0" />
-                <folding />
-              </first_editor>
-              <second_editor />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="client_secret_java.json" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/org/gov/email/google/client_secret_java.json">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="216">
-              <caret line="12" column="28" selection-start-line="12" selection-start-column="7" selection-end-line="12" selection-end-column="28" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="client_secret_java2.json" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/resources/client_secret_java2.json">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="270">
-              <caret line="15" column="1" selection-start-line="15" selection-start-column="1" selection-end-line="15" selection-end-column="1" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -138,7 +48,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/main/java/org/gov/email/EmailUtils.java" />
         <option value="$USER_HOME$/.m2/settings.xml" />
         <option value="$PROJECT_DIR$/HSFileDigester.iml" />
         <option value="$PROJECT_DIR$/.idea/compiler.xml" />
@@ -161,6 +70,7 @@
         <option value="$PROJECT_DIR$/src/main/resources/client_secret_971270578758.json" />
         <option value="$PROJECT_DIR$/src/main/java/org/gov/email/google/client_secret_971270578758.json" />
         <option value="$PROJECT_DIR$/src/main/java/org/gov/email/google/HSGMail.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/gov/email/EmailUtils.java" />
         <option value="$PROJECT_DIR$/Google Authentication" />
       </list>
     </option>
@@ -204,6 +114,8 @@
     </navigator>
     <panes>
       <pane id="Scratches" />
+      <pane id="Scope" />
+      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -422,8 +334,6 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
-      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -845,19 +755,22 @@
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.41511285" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.23552503" sideWeight="0.50516796" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.31501472" sideWeight="0.4948387" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32941177" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.31501472" sideWeight="0.4948387" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22868218" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22868218" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.249354" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2983317" sideWeight="0.49483204" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="JSON Formatter" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -865,10 +778,7 @@
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="JSON Utils" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32967743" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection Results" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32941177" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.30618253" sideWeight="0.49483204" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.41511285" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32941177" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32941177" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
@@ -909,12 +819,6 @@
           <line>677</line>
           <properties />
           <option name="timeStamp" value="36" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/org/gov/email/google/HSGMail.java</url>
-          <line>234</line>
-          <properties />
-          <option name="timeStamp" value="38" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/org/gov/email/google/HSGMail.java</url>
@@ -1152,13 +1056,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/gov/email/EmailProcessor.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1692">
-          <caret line="103" column="0" selection-start-line="103" selection-start-column="0" selection-end-line="103" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/org/gov/email/client_secret_971270578758-skffl0pv1dkm2iqnt536uh7reqqtd0er.apps.googleusercontent.com.json" />
     <entry file="file://$PROJECT_DIR$/src/main/java/org/gov/file/FileIngest.java">
       <provider selected="true" editor-type-id="text-editor">
@@ -1209,14 +1106,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/gov/email/EmailUtils.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="108">
-          <caret line="8" column="13" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$MAVEN_REPOSITORY$/com/google/apis/google-api-services-gmail/v1-rev53-1.22.0/google-api-services-gmail-v1-rev53-1.22.0.jar!/com/google/api/services/gmail/Gmail.class">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="45954">
@@ -1225,14 +1114,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/target/classes/client_secret_971270578758.json" />
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/gov/email/google/HSGMail.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4230">
-          <caret line="259" column="5" selection-start-line="259" selection-start-column="5" selection-end-line="259" selection-end-column="5" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$MAVEN_REPOSITORY$/com/google/oauth-client/google-oauth-client/1.22.0/google-oauth-client-1.22.0.jar!/com/google/api/client/auth/oauth2/Credential.class">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1250">
@@ -1240,26 +1121,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/gov/elasticsearch/ESClient.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="324">
-          <caret line="33" column="17" selection-start-line="33" selection-start-column="17" selection-end-line="33" selection-end-column="17" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$MAVEN_REPOSITORY$/org/json/json/20160810/json-20160810-sources.jar!/org/json/JSONObject.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="18">
           <caret line="635" column="0" selection-start-line="635" selection-start-column="0" selection-end-line="635" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/gov/email/EMailReceiver.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="11934">
-          <caret line="683" column="47" selection-start-line="683" selection-start-column="47" selection-end-line="683" selection-end-column="47" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1272,8 +1137,51 @@
     </entry>
     <entry file="jar://$MAVEN_REPOSITORY$/com/google/oauth-client/google-oauth-client/1.22.0/google-oauth-client-1.22.0.jar!/com/google/api/client/auth/oauth2/TokenRequest.class">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="54">
-          <caret line="6" column="0" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
+        <state relative-caret-position="216">
+          <caret line="32" column="17" selection-start-line="32" selection-start-column="17" selection-end-line="32" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/gov/email/EmailProcessor.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="646">
+          <caret line="103" column="0" selection-start-line="103" selection-start-column="0" selection-end-line="103" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/gov/email/EMailReceiver.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="378">
+          <caret line="74" column="5" selection-start-line="74" selection-start-column="5" selection-end-line="74" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/gov/email/EmailUtils.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="22" selection-start-line="0" selection-start-column="22" selection-end-line="0" selection-end-column="22" />
+          <folding>
+            <element signature="imports" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/gov/elasticsearch/ESClient.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="30" selection-start-line="0" selection-start-column="30" selection-end-line="0" selection-end-column="30" />
+          <folding>
+            <element signature="imports" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/gov/email/google/HSGMail.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="233">
+          <caret line="170" column="0" selection-start-line="170" selection-start-column="0" selection-end-line="170" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -1284,8 +1192,8 @@
       </provider>
       <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
         <state split_layout="FIRST">
-          <first_editor relative-caret-position="1422">
-            <caret line="79" column="0" selection-start-line="79" selection-start-column="0" selection-end-line="79" selection-end-column="0" />
+          <first_editor relative-caret-position="266">
+            <caret line="75" column="58" selection-start-line="75" selection-start-column="58" selection-end-line="75" selection-end-column="99" />
             <folding />
           </first_editor>
           <second_editor />
@@ -1294,8 +1202,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/org/gov/email/google/client_secret_java.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="216">
-          <caret line="12" column="28" selection-start-line="12" selection-start-column="7" selection-end-line="12" selection-end-column="28" />
+        <state relative-caret-position="270">
+          <caret line="15" column="1" selection-start-line="15" selection-start-column="1" selection-end-line="15" selection-end-column="1" />
           <folding />
         </state>
       </provider>

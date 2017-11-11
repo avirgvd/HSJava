@@ -13,7 +13,7 @@ The authentication creds including access token and refresh token should be stor
 The HSJava/EMailReceiver uses the stored creds in ES to connect to GMail.
 
 ## Google API Console
-\https://console.developers.google.com/
+https://console.developers.google.com/
 
 ##Authentication from Browser
 
@@ -74,6 +74,16 @@ FINALLY gooogle authentication is working
 
 Date: 29/10/2017
 Trying hello.js again. Registered Google client secret at https://auth-server.herokuapp.com/#signin
-
+Totally got rid of hello.js as it forces the app to use their site as redirect URI. 
+They will gain full access to the user accounts. NOT SAFE
 Finally this site gave relevant info
 http://voidcanvas.com/googles-oauth-api-node-js/
+
+
+###IMP
+The refresh_token is only sent when the user initially authorizes your app with their account.
+So it the getToken function only returns it the first time (because you should store it).
+Added approval_prompt: "force" to the generateAuthUrl options, and I can get it every time.
+Without the approval_prompt you can go to the user google account security settings under
+"Apps with access to your account and remove HSAppl from the list
+Once you do that you will receive refresh token

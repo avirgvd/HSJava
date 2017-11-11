@@ -14,7 +14,7 @@ public class EmailUtils {
 		 * Email address can be in one of the following forms:
 		 * "Govind Avireddi <avgovind@gmail.com>;"
 		 * "govind.avireddi@gmail.com;"
-		 * The resulting JSON output should have name and address as seperate items
+		 * The resulting JSON output should have name and address as separate items
 		 */
 		JSONObject jsonData = null;
 
