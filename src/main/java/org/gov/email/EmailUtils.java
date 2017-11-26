@@ -2,13 +2,14 @@ package org.gov.email;
 
 //import javax.json.Json;
 //import javax.json.JsonObject;
+import javax.mail.Address;
 import javax.mail.internet.InternetAddress;
 
 import org.json.JSONObject;
 
 public class EmailUtils {
 	
-	public static String parseEmailAddress(InternetAddress emailAddress){
+	public static String parseEmailAddress(Address[] emailAddress){
 		
 		/**
 		 * Email address can be in one of the following forms:
@@ -18,6 +19,7 @@ public class EmailUtils {
 		 */
 		JSONObject jsonData = null;
 
+
 		// sometimes getPersonal() can return null but .add() wont take null params.
 //		JsonObject jsonData = Json.createObjectBuilder()
 //				.add("Name", new String(emailAddress.getPersonal() + ""))
@@ -25,7 +27,7 @@ public class EmailUtils {
 //				.build();
 //
 //
-		return jsonData.toString();
+		return emailAddress[0].toString();
 	}
 
 	public static void main(String[] args) {

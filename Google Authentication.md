@@ -80,10 +80,10 @@ Finally this site gave relevant info
 http://voidcanvas.com/googles-oauth-api-node-js/
 
 
-###IMP
+###IMP:
 The refresh_token is only sent when the user initially authorizes your app with their account.
 So it the getToken function only returns it the first time (because you should store it).
 Added approval_prompt: "force" to the generateAuthUrl options, and I can get it every time.
 Without the approval_prompt you can go to the user google account security settings under
-"Apps with access to your account and remove HSAppl from the list
-Once you do that you will receive refresh token
+"Apps with access to your account and remove HSAppl from the list.
+Once you do that you will receive refresh token.

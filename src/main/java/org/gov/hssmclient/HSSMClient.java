@@ -10,7 +10,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 // RESTFul API client implementation to talk to HSStorageManager
@@ -77,6 +76,56 @@ public class HSSMClient {
 
     }
 
+    public static JSONObject uploadFile(byte[] bytes, JSONObject jsonMetaData) {
+
+        String bucket = "staging";
+
+        // This function returns objID and bucket after successful upload of the file
+        JSONObject jsonOutput = new JSONObject("{\"objID\":\"\", \"bucket\": " + bucket + "}");
+        String responseString = "";
+
+        try {
+
+            URL url = new URL("http://localhost:3040/rest/upload");
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setDoOutput(true);
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Accept", "application/json");
+            conn.setRequestProperty("Content-Type", jsonMetaData.getString("mimetype"));
+            // Send file metadata through header
+            conn.setRequestProperty("metadata", jsonMetaData.toString());
+
+            OutputStream os = conn.getOutputStream();
+            os.write(bytes);
+            os.flush();
+            os.close();
+
+            System.out.println("Before making the rest call");
+
+            if (conn.getResponseCode() != 200) {
+                throw new RuntimeException("Failed : HTTP error code : "
+                        + conn.getResponseCode());
+            }
+
+            BufferedReader in = new BufferedReader(
+                    new InputStreamReader(
+                            conn.getInputStream()));
+            String decodedString;
+            while ((decodedString = in.readLine()) != null) {
+                responseString += decodedString;
+                System.out.println("File Upload response: " + responseString);
+            }
+
+
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return new JSONObject(responseString);
+    }
+
     public static InputStream getFile(String bucket, String objID){
 
         try {
@@ -97,11 +146,11 @@ public class HSSMClient {
 
             System.out.println("Before making the rest call");
 
-
             if (conn.getResponseCode() != 200) {
                 throw new RuntimeException("Failed : HTTP error code : "
                         + conn.getResponseCode());
             }
+
             System.out.println("After making the rest call");
 
             return conn.getInputStream();

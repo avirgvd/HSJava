@@ -15,20 +15,23 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.util.StringUtils;
 import com.google.api.services.gmail.Gmail;
-import com.google.api.services.gmail.GmailScopes;
 import com.google.api.services.gmail.model.*;
+import org.gov.email.MessageData;
+import org.gov.hssmclient.HSSMClient;
 import org.json.JSONObject;
+
+import com.google.api.client.repackaged.org.apache.commons.codec.binary.Base64;
 
 
 import javax.mail.MessagingException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+
+import java.io.IOException;
+
 
 // Implementing Server-Side Authorization
 // https://developers.google.com/gmail/api/auth/web-server
@@ -203,10 +206,11 @@ public class HSGMail {
         }
     }
 
-    public static void receiveNewMails(Gmail service, int lastMailId)
+    public static List<MessageData> pullNewEmails(Gmail service, int lastMailId)
             throws IOException, MessagingException {
 
         List<String> labels = Arrays.asList("INBOX");
+        List<MessageData> outMessages2 = new ArrayList<MessageData>();
 
         try {
             ListMessagesResponse response = service.users()
@@ -233,13 +237,32 @@ public class HSGMail {
 
 
             for (Message message : messages) {
+                System.out.println("Message ID: " + message.getId());
                 System.out.println(message.toPrettyString());
-                System.out.println(message.getSnippet());
 
-//                byte[] emailBytes = base64Url.decodeBase64(service.users().messages().get("me", message.getId()).setFormat("full").execute().getPayload().toPrettyString());
-                String emailBytes = service.users().messages().get("me", message.getId()).setFormat("full").execute().getPayload().toPrettyString();
+//                java.util.List<MessagePart> msgParts = service.users().messages().get("me", message.getId()).setFormat("full").execute().getPayload().getParts();
+//
+//                for ( MessagePart part : msgParts) {
+//                    System.out.println(part.getParts());
+//                    System.out.println(part.getHeaders());
+//                }
 
-                System.out.println(emailBytes);
+
+                MessageData msgData = getMessageContents(service, "me", message.getId());
+
+//                Message m1 = service.users().messages().get("me", message.getId()).setFormat("raw").execute();
+//                Base64 base64Url = new Base64(true);
+//                byte[] emailBytes = base64Url.decodeBase64(m1.getRaw());
+//
+//                Properties props = new Properties();
+//                Session session = Session.getDefaultInstance(props, null);
+//
+//                MimeMessage email = new MimeMessage(session, new ByteArrayInputStream(emailBytes));
+//                MessageData msgData = new MessageData(email);
+
+                outMessages2.add(msgData);
+
+
 
 //                Properties props = new Properties();
 //                Session session = Session.getDefaultInstance(props, null);
@@ -255,8 +278,230 @@ public class HSGMail {
         }
 
 
+        return outMessages2;
 
 
+    }
+
+    private static MessageData getMessageContents(Gmail service, String userID, String messageId) throws IOException, MessagingException {
+
+
+        MessageData msgData = new MessageData();
+        msgData.id = messageId;
+
+
+        JSONObject jsonMetaData = new JSONObject();
+        String attachmentIDs = "";
+
+        Message message = service.users().messages().get(userID, messageId).execute();
+        List<MessagePart> parts = message.getPayload().getParts();
+
+        System.out.println(message.getPayload().getHeaders().toString());
+
+        msgData = getHeaderData(message.getPayload().getHeaders(), msgData);
+
+        if(parts == null) {
+            getMessageBody(message.getPayload(), msgData);
+        }
+        else {
+
+            for(MessagePart part: parts) {
+
+                String filename = part.getFilename();
+
+                if(filename != null && filename.length() > 0) {
+
+                    // TODO: move this section code to getAttachments function
+
+                    // This must be email attachment
+                    String attId = part.getBody().getAttachmentId();
+                    MessagePartBody attachPart = service
+                            .users()
+                            .messages()
+                            .attachments()
+                            .get(userID, message.getId(), attId)
+                            .execute();
+
+                    Base64 base64Url = new Base64(true);
+                    byte[] fileByteArray = base64Url.decodeBase64(attachPart.getData());
+                    jsonMetaData.put("source", "google");
+                    jsonMetaData.put("sourceID", message.getId());
+                    jsonMetaData.put("mimetype", part.getMimeType());
+                    jsonMetaData.put("orgfilename", filename);
+
+                    JSONObject jsonFileID = HSSMClient.uploadFile(fileByteArray, jsonMetaData);
+                    System.out.println("getMessageAttachments: attachment fileID " + jsonFileID.getString("FileID"));
+                    attachmentIDs += jsonFileID.getString("FileID") + ",";
+
+                }
+                else {
+                    // This is not attachment so check if its the email body
+                    System.out.println(part.getMimeType());
+
+                    getMessageBody(part, msgData);
+
+
+                }
+            }
+
+        }
+
+
+//        return attachmentIDs;
+//
+//
+//
+//        String attachmentIDs = getMessageAttachments(service, userID, message.getId());
+        System.out.println("Number of attachments found: " + attachmentIDs.split(",").length);
+        msgData.attachment_IDs = attachmentIDs;
+
+
+        return msgData;
+
+    }
+
+    private static MessageData getMessageBody(MessagePart part, MessageData msgData) throws IOException, MessagingException {
+
+        if(part.getMimeType().startsWith("text") == true) {
+            msgData = processTextContent(part, msgData);
+        }
+        else if(part.getMimeType().contains("multipart/alternative")) {
+            msgData = processMultiPartAlternative(part, msgData);
+
+        }
+        else if(part.getMimeType().contains("multipart/mixed")) {
+            msgData = processMultiPartMixed(part, msgData);
+
+        }
+        else {
+            // unknown email message part mime type so skip it for now
+            System.out.println("Unknown message mime type found!!!");
+        }
+
+        return msgData;
+
+    }
+
+    private static MessageData processTextContent(MessagePart part, MessageData messageData) throws IOException, MessagingException {
+
+        if(part.getMimeType().contains("text/plain") == true) {
+            // Prefer html but if plain text is only available then get it
+            if(messageData.body.length() == 0) {
+                messageData.body = StringUtils.newStringUtf8(Base64.decodeBase64(part.getBody().getData()));
+                messageData.contentType = part.getMimeType();
+            }
+        }
+        else if(part.getMimeType().contains("text/html") == true) {
+            // Prefer html as its easy to parse the message in this format
+            messageData.body = StringUtils.newStringUtf8(Base64.decodeBase64(part.getBody().getData()));
+            messageData.contentType = part.getMimeType();
+        }
+
+        return messageData;
+    }
+
+
+    private static MessageData processMultiPartMixed(MessagePart part, MessageData messageData) {
+        // Multipart/mixed is used for sending files with different "Content-Type" headers inline (or as attachments).
+        // If sending pictures or other easily readable files, most mail clients will display them inline
+        // (unless otherwise specified with the "Content-disposition" header). Otherwise it will offer them as attachments.
+        // The default content-type for each part is "text/plain".
+
+        return messageData;
+    }
+
+    private static MessageData processMultiPartAlternative(MessagePart messagepart, MessageData messageData) throws IOException, MessagingException {
+
+        System.out.println("processMultipartAlternative: start");
+
+        // This is a multi-part content
+        // Many email servers are configured to automatically generate a plain text version
+        // of a message and send it along with the HTML version, to ensure that it can be read
+        // even by text-only email clients, using the Content-Type: multipart/alternative,
+        // as specified in RFC 1521.[11][12][13] The message itself is of type multipart/alternative,
+        // and contains two parts, the first of type text/plain, which is read by text-only clients,
+        // and the second with text/html, which is read by HTML-capable clients.
+        // The plain text version may be missing important formatting information, however.
+        // (For example, an equation may lose a superscript and take on an entirely new meaning.)
+        // Many mailing lists deliberately block HTML email, either stripping out the HTML part to
+        // just leave the plain text part or rejecting the entire message.
+        // Source: http://en.wikipedia.org/wiki/HTML_email
+
+        List<MessagePart> parts =  messagepart.getParts();
+
+        for(MessagePart part: parts) {
+            System.out.println("Body part type " + part.getMimeType());
+            messageData = processTextContent(part, messageData);
+        }
+
+        return messageData;
+    }
+
+
+
+    private static MessageData getHeaderData(List<MessagePartHeader> headers, MessageData msgData) {
+
+        for(MessagePartHeader header: headers) {
+            System.out.println(header.getName());
+            System.out.println(header.getValue());
+
+            if(header.getName().compareTo("From") == 0) {
+                msgData.from = header.getValue();
+            }
+            else if(header.getName().compareTo("To") == 0) {
+                msgData.to = header.getValue();
+            }
+            else if(header.getName().compareTo("Subject") == 0) {
+                msgData.subject = header.getValue();
+            }
+            else if(header.getName().compareTo("Date") == 0) {
+                msgData.sentDate = header.getValue();
+            }
+        }
+
+        return msgData;
+    }
+
+
+    // Code reference site: https://developers.google.com/gmail/api/v1/reference/users/messages/attachments/get
+    // Gets all attachment files and stores in the HSS and returns all the fileIDs along with filenames
+    private static String getMessageAttachments(Gmail service, String userId, String messageId) throws IOException {
+
+        JSONObject jsonMetaData = new JSONObject();
+        String attachmentIDs = "";
+
+        Message message = service.users().messages().get(userId, messageId).execute();
+        List<MessagePart> parts = message.getPayload().getParts();
+
+        for(MessagePart part: parts) {
+            String filename = part.getFilename();
+            if(filename != null && filename.length() > 0) {
+
+                String partHeaderStr = part.getHeaders().toString();
+
+                String attId = part.getBody().getAttachmentId();
+                MessagePartBody attachPart = service
+                                                .users()
+                                                .messages()
+                                                .attachments()
+                                                .get(userId, messageId, attId)
+                                                .execute();
+
+                Base64 base64Url = new Base64(true);
+                byte[] fileByteArray = base64Url.decodeBase64(attachPart.getData());
+                jsonMetaData.put("source", "google");
+                jsonMetaData.put("sourceID", messageId);
+                jsonMetaData.put("mimetype", part.getMimeType());
+                jsonMetaData.put("orgfilename", filename);
+
+                JSONObject jsonFileID = HSSMClient.uploadFile(fileByteArray, jsonMetaData);
+                System.out.println("getMessageAttachments: attachment fileID " + jsonFileID.getString("FileID"));
+                attachmentIDs += jsonFileID.getString("FileID") + ",";
+
+            }
+        }
+
+        return attachmentIDs;
     }
 
     public static void main(String[] args) throws IOException {

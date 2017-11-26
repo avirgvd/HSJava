@@ -160,6 +160,29 @@ public class ESClient {
         return 0;
     }
 
+    public int indexBulkDocuments( String index, ArrayList<JSONObject> arrDocs) {
+
+        BulkRequestBuilder bulkRequest = client.prepareBulk();
+
+        for(JSONObject jsonDocument: arrDocs) {
+
+            System.out.println("indexBulkDocuments: jsonDocument: " + jsonDocument.toString());
+            bulkRequest.add(client.prepareIndex(
+                    index,
+                    index,
+                    jsonDocument.getString("id")).setSource(jsonDocument.toString())
+            );
+
+        }
+
+        BulkResponse bulkResponse = bulkRequest.get();
+        if (bulkResponse.hasFailures()) {
+            // process failures by iterating through each bulk response item
+            System.out.println("Errors in bulk indexing");
+        }
+
+        return 0;
+    }
 
     public int getDocument(String indexName, String indexType, String id) {
         GetResponse response = client.prepareGet(indexType, indexType, id)
