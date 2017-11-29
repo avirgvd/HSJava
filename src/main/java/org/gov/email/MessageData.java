@@ -73,7 +73,7 @@ public class MessageData {
 		jsonObj.put("content-type", contentType);
 		jsonObj.put("subject", subject);
 		jsonObj.put("body", body);
-		jsonObj.put("attachment-ids", attachment_IDs);
+		jsonObj.put("attachment_ids", attachment_IDs);
 
 
 		return jsonObj;
