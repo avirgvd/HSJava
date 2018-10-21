@@ -31,8 +31,8 @@ public class HSSMClient {
             conn.setRequestProperty("Content-Type", "application/json");
 
             // TODO: Below line changed temporarily. Should be reverted
-            JSONObject body = new JSONObject("{\"params\": {\"bucket\": \"staging\"}, \"query\": {\"match\": {\"status\": \"staging\"}}}}");
-//            JSONObject body = new JSONObject("{\"params\": {\"bucket\": \"staging\"}, \"query\": {\"match\": {\"status\": \"staged\"}}}}");
+//            JSONObject body = new JSONObject("{\"params\": {\"bucket\": \"staging\"}, \"query\": {\"match\": {\"status\": \"staging\"}}}}");
+            JSONObject body = new JSONObject("{\"params\": {\"bucket\": \"staging\"}, \"query\": {\"match\": {\"status\": \"stage1\"}}}}");
 
             OutputStream os = conn.getOutputStream();
             os.write(body.toString().getBytes());
@@ -229,7 +229,7 @@ public class HSSMClient {
 
     }
 
-    public static void bulkUpdate(ArrayList<JSONObject> arrItems, String bucket) {
+    public static void bulkUpdate(ArrayList<JSONObject> arrItems) {
 
 
         System.out.println("bulkUpdate: arrItems: " + arrItems.toString());

@@ -48,6 +48,8 @@ public class FileIngest {
             jsonMoveItem.put("sourcebucket", stagedFile.getString("container"));
             jsonMoveItem.put("id", stagedFile.getString("id"));
 
+            System.out.println("jsonMoveItem: " + jsonMoveItem.toString());
+
             arrMoveList.add(jsonMoveItem);
 
 
@@ -60,7 +62,8 @@ public class FileIngest {
         System.out.println("getBucketForMimeType: " + mimeType);
 
         String bucket = "";
-        if(mimeType.compareTo("image/jpeg") == 0) {
+//        if(mimeType.compareTo("image/jpeg") == 0) {
+        if(mimeType.indexOf("image/") == 0) {
             bucket = "media1";
         }
         else if(mimeType.compareTo("application/pdf") == 0) {
@@ -101,11 +104,13 @@ public class FileIngest {
             String mimetype = stagedFile.getString("mimetype");
             System.out.println("mimetype: " + mimetype);
 
-            JSONObject jsonFinal = null;
-            JSONObject jsonIndexCategory = null;
+//            JSONObject jsonFinal = null;
+//            JSONObject jsonIndexCategory = null;
             String indexName = "";
 
-            if (mimetype.compareTo("image/jpeg") == 0) {
+//            if (mimetype.compareTo("image/jpeg") == 0) {
+            // Look for Mimetypes image/*
+            if (mimetype.indexOf("image/") == 0) {
                 indexName = "photos";
 
                 System.out.println("image/jpeg found!!!!!!!!");
@@ -119,9 +124,33 @@ public class FileIngest {
 
                 System.out.println("jsonExif: " + jsonExif.toString());
 
-                stagedFile.put("exif", jsonExif.getJSONObject("exif"));
-                stagedFile.put("status", "staged");
-                stagedFile.put("file_date", jsonExif.getJSONObject("exif").getJSONObject("Exif IFD0").getString("Date/Time"));
+                JSONObject metadata = new JSONObject();
+
+                if(jsonExif.getJSONObject("exif").has("Exif IFD0")){
+                    stagedFile.put("file_date", jsonExif.getJSONObject("exif").getJSONObject("Exif IFD0").getString("Date/Time"));
+                    metadata.put("camera", jsonExif.getJSONObject("exif").getJSONObject("Exif IFD0").getString("Model"));
+                }
+                else {
+                    metadata.put("camera", "");
+                    stagedFile.put("file_date", "");
+                }
+
+                if(jsonExif.getJSONObject("exif").has("GPS"))
+                    metadata.put("location_gps", jsonExif.getJSONObject("exif").getJSONObject("GPS"));
+                else
+                    metadata.put("location_gps", new JSONObject());
+                metadata.put("location_addr", "");
+                metadata.put("source", "");
+                metadata.put("tags", "");
+                metadata.put("galleries", "");
+
+
+
+                System.out.println("metadata: " + metadata.toString());
+
+//                stagedFile.put("exif", jsonExif.getJSONObject("exif"));
+                stagedFile.put("metadata", metadata);
+                stagedFile.put("status", "stage1");
 
 //                jsonIndexCategory = new JSONObject();
 ////                jsonIndexCategory.put("index", "photos");
@@ -145,12 +174,30 @@ public class FileIngest {
                 System.out.println("\n jsonMeta: " + jsonMeta.toString());
 //                System.out.println("\n jsonMeta: date" + jsonMeta..getString("CreationDate"));
 
-                stagedFile.put("pdfmeta", jsonMeta);
-                stagedFile.put("status", "staged");
+                JSONObject metadata = new JSONObject();
+
+                if(jsonMeta.has("Title"))
+                    metadata.put("Title", jsonMeta.getString("Title"));
+                else
+                    metadata.put("Title", "");
+                if(jsonMeta.has("Author"))
+                    metadata.put("Author", jsonMeta.getString("Author"));
+                else
+                    metadata.put("Author", "");
+                if(jsonMeta.has("Keywords"))
+                    metadata.put("Keywords", jsonMeta.getString("Keywords"));
+                else
+                    metadata.put("Keywords", "");
+
+                System.out.println("\n metadata: " + metadata.toString());
+
+//                stagedFile.put("pdfmeta", jsonMeta);
+                stagedFile.put("metadata", metadata);
+                stagedFile.put("status", "stage1");
                 if(jsonMeta.has("CreationDate"))
                     stagedFile.put("file_date", jsonMeta.getString("CreationDate"));
-                else if(jsonMeta.has("ModificationDate"))
-                    stagedFile.put("file_date", jsonMeta.getString("ModificationDate"));
+//                else if(jsonMeta.has("ModificationDate"))
+//                    stagedFile.put("file_date", jsonMeta.getString("ModificationDate"));
                 else
                     stagedFile.put("file_date", "");
 
@@ -164,7 +211,7 @@ public class FileIngest {
         }
 
         System.out.println("arrFinal: " + arrFinal.toString());
-        HSSMClient.bulkUpdate(arrFinal, "media1");
+        HSSMClient.bulkUpdate(arrFinal);
 
         return arrFinal;
 
