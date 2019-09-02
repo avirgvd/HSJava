@@ -126,14 +126,20 @@ public class FileIngest {
 
                 JSONObject metadata = new JSONObject();
 
+                // Initialize to avoid errors in the client applications
+                metadata.put("camera", "");
+                stagedFile.put("file_date", "");
+
                 if(jsonExif.getJSONObject("exif").has("Exif IFD0")){
-                    stagedFile.put("file_date", jsonExif.getJSONObject("exif").getJSONObject("Exif IFD0").getString("Date/Time"));
-                    metadata.put("camera", jsonExif.getJSONObject("exif").getJSONObject("Exif IFD0").getString("Model"));
+                    if(jsonExif.getJSONObject("exif").getJSONObject("Exif IFD0").has("Date/Time"))
+                        stagedFile.put("file_date", jsonExif.getJSONObject("exif").getJSONObject("Exif IFD0").getString("Date/Time"));
+                    if(jsonExif.getJSONObject("exif").getJSONObject("Exif IFD0").has("Model"))
+                        metadata.put("camera", jsonExif.getJSONObject("exif").getJSONObject("Exif IFD0").getString("Model"));
                 }
-                else {
-                    metadata.put("camera", "");
-                    stagedFile.put("file_date", "");
-                }
+//                else {
+//                    metadata.put("camera", "");
+//                    stagedFile.put("file_date", "");
+//                }
 
                 if(jsonExif.getJSONObject("exif").has("GPS"))
                     metadata.put("location_gps", jsonExif.getJSONObject("exif").getJSONObject("GPS"));
